@@ -11,26 +11,9 @@ import matplotlib.pyplot as plt
 from vektor import distance, point2line
 
 
-def image_rgb(img):
-    return cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
-def image_gray(image):
-    return cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
-
-def image_bin(image_gs):
-    height, width = image_gs.shape[0:2]
-    image_binary = np.ndarray((height, width), dtype=np.uint8)
-    ret,image_bin = cv2.threshold(image_gs, 127, 255, cv2.THRESH_BINARY)
-    return image_bin
-
-def invert(image):
-    return 255-image
-
-
 def resize_region(region):
     '''Transformisati selektovani region na sliku dimenzija 28x28'''
     return cv2.resize(region,(28,28), interpolation = cv2.INTER_NEAREST)
-
 
 cnt = -1
 def next_id():
@@ -151,19 +134,10 @@ def get_sum(video_path):
             upper = np.array([255, 255, 255])
             # Threshold the HSV image to get only white colors
             mask = cv2.inRange(frame, lower, upper)
-            ###
-            img_rgb = image_rgb(frame_org)
-            img_gray = image_gray(frame_org)
-            img_bin = image_bin(img_gray)
-            #test = invert(img_bin)
-            ###
+
             img_dilate = cv2.dilate(mask, kernel)
             img_dilate = cv2.dilate(img_dilate, kernel)
 
-            #img_with_dilated_objects = cv2.dilate(img_with_dilated_objects, kernel)
-
-            #selected_regions, numbers, sum = select_roi(frame.copy(), img_with_dilated_objects, frame, brojevi, mask)
-            #selected_regions, numbers, sum = select_roi(frame.copy(), test, frame, brojevi, mask)
 
             image_orig = frame.copy()
             contours, hierarchy = cv2.findContours(img_dilate.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
